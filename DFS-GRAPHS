@@ -1,0 +1,70 @@
+You are given a string s, and an array of pairs of indices in the string pairs where pairs[i] = [a, b] indicates 2 indices(0-indexed) of the string.
+You can swap the characters at any pair of indices in the given pairs any number of times.
+Return the lexicographically smallest string that s can be changed to after using the swaps.
+Input: s = "dcab", pairs = [[0,3],[1,2]]
+Output: "bacd"
+Explaination: 
+Swap s[0] and s[3], s = "bcad"
+Swap s[1] and s[2], s = "bacd"
+
+class Solution {
+    ArrayList<Integer> global[];
+    int MAX= 1000001;
+    boolean[] visited = new boolean[MAX];
+    public void dfs(String s, int vertex, List<Integer> index, List<Character> characters)
+    {
+
+        characters.add(s.charAt(vertex));
+        index.add(vertex);
+        visited[vertex] = true;
+        
+        for(int adjacent : global[vertex])
+        {
+            if(!visited[adjacent])
+            {
+                dfs(s, adjacent, index, characters);
+            }
+        }
+        
+    }
+    public String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+        int n=s.length();
+        ArrayList<Integer> adjlist[]= new ArrayList[n];
+        for(int i=0;i<n;i++)
+        {
+            adjlist[i] =  new ArrayList<Integer>(); //adjacency list bi directional
+        }
+        for(int i=0;i<pairs.size();i++)
+        {
+            int source = pairs.get(i).get(0);
+            int dest = pairs.get(i).get(1);
+        
+            adjlist[source].add(dest);
+            adjlist[dest].add(source);
+           
+        }
+        global = adjlist;
+      
+        
+        char[] ans=new char[n];
+        
+        for(int i=0;i<n;i++) //i == vertex
+        {
+            if(!visited[i])
+            {
+                List<Integer> indices = new ArrayList<>();
+                List<Character>  characters = new ArrayList<>();
+                
+                dfs(s, i, indices, characters);//find all connected componenets of ith vertex
+                Collections.sort(indices);
+                Collections.sort(characters);
+                for(int j=0;j<indices.size();j++)
+                {
+                    ans[indices.get(j)] = characters.get(j);//get lexicographically smallest string
+                }
+                
+            }
+        }
+        return new String(ans);
+    }
+}
