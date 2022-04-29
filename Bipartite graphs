@@ -1,0 +1,55 @@
+Graphs which can be coloured with two different colors such that no two adjacent nodes have the same color are bipartite in nature.
+can be bipartite if it does not has odd length cycle
+T:O(V+E)
+S:O(V)
+BFS
+class Solution {
+    public boolean bfsisbipartite(int[][] graph, int[] color, int i)
+    {
+        Queue<Integer> q = new LinkedList<Integer>();
+        q.add(i);
+        color[i]= 1;
+        
+        while(!q.isEmpty())
+        {
+            int front = q.poll(); 
+            for(int adjacent : graph[front])
+            {
+                if(color[adjacent] == 0)//NOT filled 
+                {
+                    color[adjacent] = -color[front]; //fill with opposite color
+                    q.add(adjacent);
+                }
+                else// filled
+                {
+                    if(color[adjacent] == color[front]) // same adjacent color
+                        return false;
+                    else
+                        continue;
+                }
+                
+            }
+        }
+        return true;
+    }
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        int[] color=new int[n];
+        
+        Arrays.fill(color, 0);//not colored
+        
+        for(int i=0;i<n;i++)
+        {
+            if(color[i] == 0)
+            {
+                if(!bfsisbipartite(graph, color, i))
+                    return false;
+            }
+        }
+        
+        return true;
+        
+        
+    }
+}
+
