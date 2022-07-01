@@ -1,0 +1,5 @@
+Sort 2D Array using lambda
+
+int[][] boxTypes 
+decreasing order
+Arrays.sort(boxTypes, (a,b) ->  b[1] - a[1]);
